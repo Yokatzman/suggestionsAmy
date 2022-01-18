@@ -1,0 +1,19 @@
+{
+  "name": "amy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "suggestions.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node suggestions.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parse": "^5.0.4",
+    "express": "^4.17.2",
+    "fs": "^0.0.1-security"
+  },
+  "engines": {"node": "14.15.1"}
+}
