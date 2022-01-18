@@ -31,11 +31,11 @@ fs.createReadStream('./cities_canada-usa.tsv').pipe(
 ).on('data', function (entry) {
     if (index > 0) {
         let new_entry = {};
-        new_entry.city=entry.name
-        if (entry.cc2 == '') {
+        new_entry.city = entry.name
+        if (entry.admin1 == '') {
             new_entry.name = entry.name + ", " + entry.country + ", " + entry.id;
         } else {
-            new_entry.name = entry.name + ", " + entry.country + ", " + entry.cc2
+            new_entry.name = entry.name + ", " + entry.country + ", " + entry.admin1
         }
         new_entry.latitude = entry.lat;
         new_entry.longitude = entry.long;
@@ -43,43 +43,41 @@ fs.createReadStream('./cities_canada-usa.tsv').pipe(
     }
     index++;
 }).on('end', function () {
-    console.log('end');
+    console.log('database loaded');
 })
 //Initialzing Local Database - end
 
 app.get('/suggestions', (req, res) => {
-    
+
     if (!req.query.q) {
         //no location provided
         res.status(400);
         res.send("please provide location");
-    }else{
-        console.log(req.query.q);
+    } else {
         let matches = [];
-        cities.forEach((obj)=>{
-            if (obj.city.toLowerCase().startsWith(req.query.q.toLowerCase())){
+        cities.forEach((obj) => {
+            if (obj.city.toLowerCase().startsWith(req.query.q.toLowerCase())) {
                 let score = 0;
-                if (!req.query.latitude && !req.query.longitude){
-                    score=0.5;
-                }else if (!req.query.longitude){
+                if (!req.query.latitude && !req.query.longitude) {
+                    score = 0.5;
+                } else if (!req.query.longitude) {
                     score = getScoreLat(req.query.latitude, obj.latitude);
-                    
-                }else if (!req.query.latitude){
+
+                } else if (!req.query.latitude) {
                     score = getScoreLong(req.query.longitude, obj.longitude);
-                }else{
-                    console.log("lat: "+ obj.latitude+ " long: "+ obj.longitude);
-                    score = getScoreLatLong(req.query.latitude,req.query.longitude,obj.latitude,obj.longitude);
+                } else {
+                    score = getScoreLatLong(req.query.latitude, req.query.longitude, obj.latitude, obj.longitude);
                 }
-                match_obj = {name: obj.name, latitude: obj.latitude, longitude: obj.longitude, score: score};
+                match_obj = { name: obj.name, latitude: obj.latitude, longitude: obj.longitude, score: score };
                 matches.push(match_obj);
             }
-            
+
         })
-        matches = matches.sort((m1,m2)=>{
-            return m2.score-m1.score;
+        matches = matches.sort((m1, m2) => {
+            return m2.score - m1.score;
         })
-        res.send({suggestions: matches});
+        res.send({ suggestions: matches });
     }
-    
+
 })
 
