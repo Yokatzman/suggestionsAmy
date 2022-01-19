@@ -6,13 +6,13 @@ const app = express();
 function getScoreLatLong(userLat, userLong, destLat, destLong) {
     let latScore = 1 - ((Math.abs(userLat - destLat)) / 180)
     let longScore = 1 - ((Math.abs(userLong - destLong)) / 360)
-    return (latScore + longScore) / 2
+    return Math.pow(((latScore + longScore) / 2),3)
 }
 function getScoreLat(userLat, destLat) {
-    return latScore = 1 - (Math.abs(userLat - destLat)) / 180
+    return latScore = Math.pow((1 - (Math.abs(userLat - destLat)) / 180),3)
 }
 function getScoreLong(userLong, destLong) {
-    return latScore = 1 - (Math.abs(userLong - destLong)) / 360
+    return latScore = Math.pow((1 - (Math.abs(userLong - destLong)) / 360),3)
 }
 
 
